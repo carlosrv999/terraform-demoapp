@@ -1,0 +1,10 @@
+name: Terraform
+on:
+  - push
+
+jobs:
+  terraform:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          echo "carlosrv125 estuvo aqui"
