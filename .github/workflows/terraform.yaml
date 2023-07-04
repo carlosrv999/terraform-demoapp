@@ -11,6 +11,10 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         name: Set Terraform version
         with:
-          terraform_version: 1.4.1
-      - run: |
+          terraform_version: 1.5.2
+      - name: Get Terraform version
+        run: |
           terraform -v
+      - name: Terraform init
+        run: |
+          terraform init
