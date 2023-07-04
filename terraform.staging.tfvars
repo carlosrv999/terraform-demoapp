@@ -1,0 +1,6 @@
+project_id         = "terraform-demo-staging"
+project_name       = "terraform-demo-staging"
+app_name           = "terraform-demo"
+public_subnet_cidr = "10.101.1.0/24"
+region             = "us-central1"
+env_name           = "staging"
