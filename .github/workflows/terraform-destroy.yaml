@@ -1,0 +1,31 @@
+name: Terraform destroy
+on:
+  - workflow_dispatch
+
+env:
+  GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  terraform_version: 1.5.2
+
+jobs:
+  destroy-dev:
+    runs-on: ubuntu-22.04
+    environment: dev
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repo
+      - uses: hashicorp/setup-terraform@v2
+        name: Set Terraform version
+        with:
+          terraform_version: ${{ env.terraform_version }}
+      - name: Get Terraform version
+        run: |
+          terraform -v
+      - name: Terraform init
+        run: |
+          terraform init
+      - name: Terraform Set Workspace Dev
+        run: |
+          terraform workspace select dev
+      - name: Terraform destroy
+        run: |
+          terraform destroy -auto-approve
