@@ -8,6 +8,7 @@ env:
 jobs:
   terraform-dev:
     runs-on: ubuntu-22.04
+    environment: dev
     steps:
       - run: |
           echo "carlosrv999 estuvo aqui"
@@ -33,6 +34,7 @@ jobs:
   terraform-staging:
     needs: terraform-dev
     runs-on: ubuntu-22.04
+    environment: staging
     steps:
       - run: |
           echo "carlosrv999 estuvo aqui"
