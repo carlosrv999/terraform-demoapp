@@ -4,6 +4,7 @@ on:
 
 env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+  terraform_version: 1.5.2
 
 jobs:
   terraform-dev:
@@ -17,7 +18,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         name: Set Terraform version
         with:
-          terraform_version: 1.5.2
+          terraform_version: ${{ env.terraform_version }}
       - name: Get Terraform version
         run: |
           terraform -v
@@ -29,7 +30,10 @@ jobs:
             terraform workspace select dev
       - name: Terraform plan
         run: |
-          terraform plan -var-file=terraform.dev.tfvars
+          terraform plan -var-file=terraform.dev.tfvars -out tfplan
+      - name: Terraform apply
+        run: |
+          terraform apply tfplan
 
   terraform-staging:
     needs: terraform-dev
@@ -43,7 +47,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         name: Set Terraform version
         with:
-          terraform_version: 1.5.2
+          terraform_version: ${{ env.terraform_version }}
       - name: Get Terraform version
         run: |
           terraform -v
@@ -55,7 +59,10 @@ jobs:
             terraform workspace select staging
       - name: Terraform plan
         run: |
-          terraform plan -var-file=terraform.staging.tfvars
+          terraform plan -var-file=terraform.staging.tfvars -out tfplan
+      - name: Terraform apply
+        run: |
+          terraform apply tfplan
 
   terraform-prod:
     needs: [terraform-dev, terraform-staging]
@@ -69,7 +76,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
         name: Set Terraform version
         with:
-          terraform_version: 1.5.2
+          terraform_version: ${{ env.terraform_version }}
       - name: Get Terraform version
         run: |
           terraform -v
@@ -81,4 +88,7 @@ jobs:
             terraform workspace select prod
       - name: Terraform plan
         run: |
-          terraform plan -var-file=terraform.prod.tfvars
+          terraform plan -var-file=terraform.prod.tfvars -out tfplan
+      - name: Terraform apply
+        run: |
+          terraform apply tfplan
