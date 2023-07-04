@@ -29,3 +29,49 @@ jobs:
       - name: Terraform destroy
         run: |
           terraform destroy -var-file=terraform.dev.tfvars -auto-approve
+  destroy-staging:
+    runs-on: ubuntu-22.04
+    needs: destroy-dev
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repo
+      - uses: hashicorp/setup-terraform@v2
+        name: Set Terraform version
+        with:
+          terraform_version: ${{ env.terraform_version }}
+      - name: Get Terraform version
+        run: |
+          terraform -v
+      - name: Terraform init
+        run: |
+          terraform init
+      - name: Terraform Set Workspace Staging
+        run: |
+          terraform workspace select staging
+      - name: Terraform destroy
+        run: |
+          terraform destroy -var-file=terraform.staging.tfvars -auto-approve
+  destroy-prod:
+    runs-on: ubuntu-22.04
+    needs: [destroy-dev, destroy-staging]
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout repo
+      - uses: hashicorp/setup-terraform@v2
+        name: Set Terraform version
+        with:
+          terraform_version: ${{ env.terraform_version }}
+      - name: Get Terraform version
+        run: |
+          terraform -v
+      - name: Terraform init
+        run: |
+          terraform init
+      - name: Terraform Set Workspace Prod
+        run: |
+          terraform workspace select prod
+      - name: Terraform destroy
+        run: |
+          terraform destroy -var-file=terraform.prod.tfvars -auto-approve
