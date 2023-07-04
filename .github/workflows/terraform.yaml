@@ -7,4 +7,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - run: |
-          echo "carlosrv125 estuvo aqui"
+          echo "carlosrv999 estuvo aqui"
+      - uses: hashicorp/setup-terraform@v2
+        name: Set Terraform version
+        with:
+          terraform_version: 1.4.1
+      - run: |
+          terraform -v
