@@ -56,3 +56,29 @@ jobs:
       - name: Terraform plan
         run: |
           terraform plan -var-file=terraform.staging.tfvars
+
+  terraform-prod:
+    needs: [terraform-dev, terraform-staging]
+    runs-on: ubuntu-22.04
+    environment: prod
+    steps:
+      - run: |
+          echo "carlosrv999 estuvo aqui"
+      - uses: actions/checkout@v3
+        name: Checkout repo
+      - uses: hashicorp/setup-terraform@v2
+        name: Set Terraform version
+        with:
+          terraform_version: 1.5.2
+      - name: Get Terraform version
+        run: |
+          terraform -v
+      - name: Terraform init
+        run: |
+          terraform init
+      - name: Terraform Set Workspace Production
+        run: |
+            terraform workspace select prod
+      - name: Terraform plan
+        run: |
+          terraform plan -var-file=terraform.prod.tfvars
