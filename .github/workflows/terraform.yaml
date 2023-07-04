@@ -6,7 +6,7 @@ env:
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
 jobs:
-  terraform:
+  terraform-dev:
     runs-on: ubuntu-22.04
     steps:
       - run: |
@@ -23,3 +23,9 @@ jobs:
       - name: Terraform init
         run: |
           terraform init
+      - name: Terraform Set Workspace Dev
+        run: |
+            terraform workspace select dev
+      - name: Terraform plan
+        run: |
+          terraform plan -var-file=terraform.dev.tfvars
